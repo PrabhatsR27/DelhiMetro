@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="hi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#2f5bea"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Delhi Metro"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Delhi Metro Route Finder</title>
+<style>
+:root{--bg:#f2f4f8;--card:#fff;--tx:#101828;--mu:#667085;--bd:#e4e7ec;--ac:#2f5bea;--ac2:#7a3ff2;--hl:#fff3c4;--sh:0 4px 18px rgba(16,24,40,.08);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0e14;--card:#161b24;--tx:#eef1f6;--mu:#98a2b3;--bd:#262d3a;--ac:#6f93ff;--ac2:#a47bff;--hl:#4a3f12;--sh:0 4px 18px rgba(0,0,0,.4)}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+.hero{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;padding:22px 16px 64px}
+.hero h1{margin:0;font-size:22px}.hero p{margin:4px 0 0;opacity:.85;font-size:13px}
+.w{max-width:560px;margin:0 auto}
+.pad{padding:0 14px}
+.search{margin-top:-46px;background:var(--card);border-radius:18px;box-shadow:var(--sh);padding:14px;position:relative;z-index:5}
+.row{display:flex;gap:10px;align-items:center}
+.rail{display:flex;flex-direction:column;align-items:center;gap:3px;width:16px}
+.rail i{width:12px;height:12px;border-radius:50%;border:3px solid var(--ac)}
+.rail i.e{border-color:#e5484d;background:#e5484d}
+.rail u{width:2px;height:26px;background:repeating-linear-gradient(var(--bd) 0 4px,transparent 4px 8px)}
+.fields{flex:1;min-width:0}
+.cb{position:relative}
+.cb input{width:100%;padding:13px 36px 13px 12px;border:1.5px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx);font-size:16px;outline:0;transition:.15s}
+.cb input:focus{border-color:var(--ac);background:var(--card)}
+.cb+.cb{margin-top:10px}
+.x{position:absolute;right:6px;top:7px;width:30px;height:30px;border:0;border-radius:50%;background:transparent;color:var(--mu);font-size:18px;display:none}
+.cb.has .x{display:block}
+.dd{position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--card);border:1px solid var(--bd);border-radius:14px;box-shadow:var(--sh);max-height:270px;overflow-y:auto;display:none;z-index:20;padding:6px}
+.cb.open .dd{display:block}
+.it{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px;border-radius:10px;cursor:pointer}
+.it.on,.it:active{background:var(--bg)}
+.it mark{background:var(--hl);color:inherit;border-radius:3px}
+.dots{display:flex;gap:4px;flex-shrink:0}.dots b{width:10px;height:10px;border-radius:50%}
+.hd{font-size:11px;color:var(--mu);padding:6px 10px;text-transform:uppercase;letter-spacing:.5px}
+.no{padding:12px;color:var(--mu)}
+.sw{width:42px;height:42px;border-radius:50%;border:1.5px solid var(--bd);background:var(--card);color:var(--ac);font-size:18px;flex-shrink:0;transition:transform .25s}
+.go{width:100%;margin-top:14px;padding:14px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-size:16px;font-weight:600}
+.go:active{transform:scale(.98)}
+.card{background:var(--card);border-radius:18px;box-shadow:var(--sh);padding:16px;margin-top:14px}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.tile{background:var(--bg);border-radius:12px;padding:10px 4px;text-align:center}
+.tile b{display:block;font-size:19px}.tile span{font-size:11px;color:var(--mu)}
+.rt{font-weight:700;font-size:16px}.mu{color:var(--mu);font-size:13px}
+.tl{margin-top:6px}
+.leg{position:relative;padding:0 0 0 30px;margin-top:14px}
+.leg:before{content:"";position:absolute;left:8px;top:10px;bottom:-4px;width:5px;border-radius:3px;background:var(--c)}
+.dot{position:absolute;left:3px;width:15px;height:15px;border-radius:50%;background:var(--card);border:4px solid var(--c)}
+.pill{display:inline-block;color:#fff;background:var(--c);padding:3px 11px;border-radius:20px;font-size:13px;font-weight:600}
+.chip{display:inline-flex;gap:5px;align-items:center;background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:3px 9px;font-size:12.5px;margin:6px 6px 0 0}
+.tg{border:0;background:none;color:var(--ac);font-size:13px;padding:6px 0;display:flex;gap:4px;align-items:center}
+.tg s{display:inline-block;text-decoration:none;transition:transform .2s}.tg.o s{transform:rotate(180deg)}
+.stops{display:none;margin:2px 0 6px;font-size:14px}.stops.o{display:block}
+.stops div{padding:4px 0;border-bottom:1px dashed var(--bd)}.stops div:last-child{border:0}
+.chg{margin:14px 0 0 0;padding:10px 12px;border-radius:12px;background:var(--hl);font-size:14px}
+.err{color:#d92d20;font-weight:500}
+.note{font-size:12px;color:var(--mu);padding:14px 4px 20px}
+.opts{display:flex;gap:10px;overflow-x:auto;padding:12px 2px 4px;scroll-snap-type:x mandatory}
+.op{flex:0 0 78%;max-width:240px;scroll-snap-align:start;border:2px solid var(--bd);border-radius:14px;padding:11px;cursor:pointer;background:var(--bg);transition:.15s}
+.op.sel{border-color:var(--ac);background:var(--card);box-shadow:var(--sh)}
+.ol{font-size:12px;font-weight:700;color:var(--ac)}.ot{font-size:21px;font-weight:700;margin:2px 0}
+.vl{display:flex;gap:3px;margin:7px 0 5px}.vl span{height:6px;flex:1;border-radius:3px}
+.tl{margin-top:2px}
+.lp{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-top:2px}.lp span{font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:10px}.lp i{font-style:normal;color:var(--mu);font-size:11px}.pfc{background:var(--hl);border-color:transparent}
+.pfr{display:flex;align-items:center;gap:10px;margin:10px 0 2px}.pfp{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;min-width:68px;padding:7px 12px;border-radius:14px;line-height:1;box-shadow:0 3px 10px rgba(0,0,0,.2);flex-shrink:0}.pfp small{font-size:9px;letter-spacing:1.2px;font-weight:700;opacity:.92}.pfp b{font-size:28px;font-weight:800;margin-top:3px}.pfp.none{background:var(--bg);color:var(--mu);border:2px dashed;box-shadow:none}.pft{font-size:14px;line-height:1.35}
+.tabs{display:flex;background:var(--bg);border-radius:12px;padding:4px;margin-bottom:14px}.tb{flex:1;border:0;background:transparent;color:var(--mu);padding:10px;border-radius:9px;font-size:14px;font-weight:600}.tb.on{background:var(--card);color:var(--ac);box-shadow:0 1px 6px rgba(16,24,40,.12)}
+.cb.has input{padding-right:12px}.ex{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.ex button{border:1px solid var(--bd);background:var(--bg);color:var(--tx);border-radius:16px;padding:6px 11px;font-size:13px}
+.pc{border:2px solid var(--bd);border-radius:16px;padding:12px;margin-top:12px;background:var(--bg)}.pc.best{border-color:var(--ac);background:var(--card)}
+.pr{display:flex;gap:10px;align-items:center}.rk{width:28px;height:28px;border-radius:50%;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.tg2{font-size:11.5px;font-weight:700;color:var(--ac)}.wk{display:flex;flex-direction:column;align-items:center;background:var(--hl);border-radius:12px;padding:6px 10px;line-height:1.1;flex-shrink:0}.wk b{font-size:20px}.wk small{font-size:10px;color:var(--mu)}
+.pb{display:flex;gap:8px;margin-top:10px}.pb button{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--bd);background:var(--card);color:var(--tx);font-size:13.5px;font-weight:600}.pb .pri{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;border:0}
+.lp{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}.lp span{font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:10px}
+.inst{margin-top:12px;border:0;background:#fff;color:#2f5bea;font-weight:700;font-size:14px;padding:9px 16px;border-radius:20px;box-shadow:0 2px 10px rgba(0,0,0,.2)}.inst2{margin-top:12px;display:inline-block;background:rgba(255,255,255,.2);padding:7px 12px;border-radius:12px;font-size:13px}
+.lv{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:14px;cursor:pointer}.lv input{display:none}.lv i{width:42px;height:24px;border-radius:12px;background:var(--bd);position:relative;flex-shrink:0;transition:.2s}.lv i:after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}.lv input:checked+i{background:var(--ac)}.lv input:checked+i:after{left:21px}.tb{padding:10px 4px;font-size:13px}
+</style></head><body>
+<div class="hero"><div class="w"><h1>🚇 Delhi Metro</h1><p>Route, line, change, time aur fare — ek jagah</p><button id="inst" class="inst" style="display:none">📲 App install karein</button><div id="ios" class="inst2" style="display:none">iPhone: Share ⬆️ → <b>Add to Home Screen</b></div></div></div>
+<div class="w pad">
+<div class="search"><div class="tabs"><button class="tb on" data-m="r">🚇 Route</button><button class="tb" data-m="p">📍 Jagah</button><button class="tb" data-m="l">📡 Location</button></div><div id="rt">
+ <div class="row"><div class="rail"><i></i><u></u><i class="e"></i></div>
+ <div class="fields"><div class="cb" id="ca"></div><div class="cb" id="cb"></div></div>
+ <button class="sw" id="sw" aria-label="Swap">⇅</button></div>
+ <button class="go" id="go">Route dekho</button></div><div id="pl" style="display:none"><div class="mu" style="margin-bottom:8px">Kahan jana hai? Landmark, mall, hospital, market ya station ka naam likhein</div><div class="cb has" style="margin-bottom:0"><input id="pq" placeholder="e.g. India Gate, Max Hospital Saket" autocomplete="off"></div><div class="ex" id="ex"></div><button class="go" id="pgo">Nearest metro dhundo</button></div><div id="ll" style="display:none"><div class="mu" style="margin-bottom:10px">GPS se pata lagayein ki aap kis metro station ke paas hain</div><button class="go" id="lgo" style="margin-top:0">📡 Meri location se station dhundo</button><label class="lv"><input type="checkbox" id="live"><i></i><span>Live update (chalte waqt station badalta rahe)</span></label></div>
+</div>
+<div id="out"></div><div id="pout" style="display:none"></div><div id="lout" style="display:none"></div>
+<div class="note">Time aur fare approximate hain (stations ke hisaab se). Platform numbers DMRC ke standard order se hain (Yellow: 1 = HUDA City Centre, 2 = Samaypur Badli · Blue: 1 = Noida/Vaishali, 2 = Dwarka Sector 21) aur Rajiv Chowk, Kashmere Gate, Rajouri Garden ke interchange numbers alag se verified hain. Baaki lines par direction dikhti hai — station par board zaroor check karein.</div>
+</div>
+<script>
+const D=[
+["Red Line","#e53935","Rithala,Rohini West,Rohini East,Pitampura,Kohat Enclave,Netaji Subhash Place,Keshav Puram,Kanhaiya Nagar,Inderlok,Shastri Nagar,Pratap Nagar,Pul Bangash,Tis Hazari,Kashmere Gate,Shastri Park,Seelampur,Welcome,Shahdara,Mansarovar Park,Jhil Mil,Dilshad Garden,Shaheed Nagar,Raj Bagh,Major Mohit Sharma Rajendra Nagar,Shyam Park,Mohan Nagar,Arthala,Hindon River,Shaheed Sthal"],
+["Yellow Line","#f5b700","Samaypur Badli,Rohini Sector 18,Haiderpur Badli Mor,Jahangirpuri,Adarsh Nagar,Azadpur,Model Town,GTB Nagar,Vishwavidyalaya,Vidhan Sabha,Civil Lines,Kashmere Gate,Chandni Chowk,Chawri Bazar,New Delhi,Rajiv Chowk,Patel Chowk,Central Secretariat,Udyog Bhawan,Lok Kalyan Marg,Jor Bagh,INA,AIIMS,Green Park,Hauz Khas,Malviya Nagar,Saket,Qutab Minar,Chhatarpur,Sultanpur,Ghitorni,Arjan Garh,Guru Dronacharya,Sikanderpur,MG Road,IFFCO Chowk,HUDA City Centre"],
+["Blue Line","#1e66d0","Dwarka Sector 21,Dwarka Sector 8,Dwarka Sector 9,Dwarka Sector 10,Dwarka Sector 11,Dwarka Sector 12,Dwarka Sector 13,Dwarka Sector 14,Dwarka,Dwarka Mor,Nawada,Uttam Nagar West,Uttam Nagar East,Janakpuri West,Janakpuri East,Tilak Nagar,Subhash Nagar,Tagore Garden,Rajouri Garden,Ramesh Nagar,Moti Nagar,Kirti Nagar,Shadipur,Patel Nagar,Rajendra Place,Karol Bagh,Jhandewalan,RK Ashram Marg,Rajiv Chowk,Barakhamba Road,Mandi House,Supreme Court,Indraprastha,Yamuna Bank,Akshardham,Mayur Vihar-I,Mayur Vihar Extension,New Ashok Nagar,Noida Sector 15,Noida Sector 16,Noida Sector 18,Botanical Garden,Golf Course,Noida City Centre,Noida Sector 34,Noida Sector 52,Noida Sector 61,Noida Sector 59,Noida Sector 62,Noida Electronic City"],
+["Blue Line (Vaishali)","#1e66d0","Yamuna Bank,Laxmi Nagar,Nirman Vihar,Preet Vihar,Karkarduma,Anand Vihar ISBT,Kaushambi,Vaishali"],
+["Green Line","#2e9e44","Brig. Hoshiyar Singh,Bahadurgarh City,Pandit Shree Ram Sharma,Tikri Border,Tikri Kalan,Ghevra,Mundka Industrial Area,Mundka,Rajdhani Park,Nangloi Railway Station,Nangloi,Maharaja Surajmal Stadium,Udyog Nagar,Peeragarhi,Paschim Vihar West,Paschim Vihar East,Madipur,Shivaji Park,Punjabi Bagh,Ashok Park Main,Inderlok"],
+["Green Line (Kirti Nagar)","#2e9e44","Ashok Park Main,Satguru Ram Singh Marg,Kirti Nagar"],
+["Violet Line","#7b3fb5","Kashmere Gate,Lal Qila,Jama Masjid,Delhi Gate,ITO,Mandi House,Janpath,Central Secretariat,Khan Market,JLN Stadium,Jangpura,Lajpat Nagar,Moolchand,Kailash Colony,Nehru Place,Kalkaji Mandir,Govind Puri,Harkesh Nagar Okhla,Jasola Apollo,Sarita Vihar,Mohan Estate,Tughlakabad,Badarpur Border,Sarai,NHPC Chowk,Mewala Maharajpur,Sector 28 Faridabad,Badkal Mor,Old Faridabad,Neelam Chowk Ajronda,Bata Chowk,Escorts Mujesar,Sant Surdas (Sihi),Raja Nahar Singh"],
+["Pink Line","#e8579a","Majlis Park,Azadpur,Shalimar Bagh,Netaji Subhash Place,Shakurpur,Punjabi Bagh West,ESI Basaidarapur,Rajouri Garden,Mayapuri,Naraina Vihar,Delhi Cantt,Durgabai Deshmukh South Campus,Sir M. Vishweshwaraiah Moti Bagh,Bhikaji Cama Place,Sarojini Nagar,INA,South Extension,Lajpat Nagar,Vinobapuri,Ashram,Sarai Kale Khan Nizamuddin,Mayur Vihar-I,Trilokpuri Sanjay Lake,East Vinod Nagar Mayur Vihar-II,Mandawali West Vinod Nagar,IP Extension,Anand Vihar ISBT,Karkarduma,Karkarduma Court,Krishna Nagar,East Azad Nagar,Welcome,Jaffrabad,Maujpur Babarpur,Gokulpuri,Johri Enclave,Shiv Vihar"],
+["Magenta Line","#c2185b","Krishna Park Extension,Janakpuri West,Dabri Mor Janakpuri South,Dashrath Puri,Palam,Sadar Bazar Cantonment,Terminal 1 IGI Airport,Shankar Vihar,Vasant Vihar,Munirka,R.K. Puram,IIT Delhi,Hauz Khas,Panchsheel Park,Chirag Delhi,Greater Kailash,Nehru Enclave,Kalkaji Mandir,Okhla NSIC,Sukhdev Vihar,Jamia Millia Islamia,Okhla Vihar,Jasola Vihar Shaheen Bagh,Kalindi Kunj,Okhla Bird Sanctuary,Botanical Garden"],
+["Airport Express","#f28c28","New Delhi,Shivaji Stadium,Dhaula Kuan,Delhi Aerocity,IGI Airport,Dwarka Sector 21,Yashobhoomi Dwarka Sector 25"],
+["Grey Line","#8a929c","Dwarka,Nangli,Najafgarh,Dhansa Bus Stand"],
+["Aqua Line","#13a8b8","Noida Sector 52,Noida Sector 51,Noida Sector 50,Noida Sector 76,Noida Sector 101,Noida Sector 81,NSEZ,Noida Sector 83,Noida Sector 137,Noida Sector 142,Noida Sector 143,Noida Sector 144,Noida Sector 145,Noida Sector 146,Noida Sector 147,Noida Sector 148,Knowledge Park II,Pari Chowk,Alpha 1,Delta 1,GNIDA Office,Depot"],
+["Rapid Metro (Gurugram)","#2a6f9e","Sikanderpur,Phase 2,Belvedere Towers,Cyber City,Moulsari Avenue,Phase 3,Sector 55-56,Sector 54 Chowk,Sector 53-54,Sector 42-43,Phase 1"]
+].map(([n,c,s])=>({n,c,s:s.split(",")}));
+const at={};D.forEach((l,i)=>l.s.forEach(s=>(at[s]=at[s]||[]).push(i)));
+const names=Object.keys(at).sort(),$=id=>document.getElementById(id);
+const POP=["Rajiv Chowk","New Delhi","Kashmere Gate","Hauz Khas","Anand Vihar ISBT","Dwarka Sector 21","HUDA City Centre","Noida Sector 18"];
+const dotsOf=n=>[...new Set(at[n].map(i=>D[i].c))].map(c=>`<b style="background:${c}"></b>`).join("");
+const esc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+function combo(el,ph){
+ el.innerHTML=`<input placeholder="${ph}" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="x" aria-label="Clear">✕</button><div class="dd"></div>`;
+ const inp=el.querySelector("input"),dd=el.querySelector(".dd");let sel=-1,cur=[];
+ el.val=null;
+ const render=()=>{
+  const q=inp.value.trim().toLowerCase();
+  cur=q?names.filter(n=>n.toLowerCase().includes(q)).sort((a,b)=>(a.toLowerCase().startsWith(q)?0:1)-(b.toLowerCase().startsWith(q)?0:1)||a.localeCompare(b)).slice(0,30):POP;
+  sel=cur.length?0:-1;
+  const re=q?new RegExp("("+esc(q)+")","ig"):null;
+  dd.innerHTML=(q?"":'<div class="hd">Popular stations</div>')+(cur.length?cur.map((n,k)=>`<div class="it${k==sel?" on":""}" data-k="${k}"><span>${re?n.replace(re,"<mark>$1</mark>"):n}</span><span class="dots">${dotsOf(n)}</span></div>`).join(""):'<div class="no">Koi station nahi mila</div>');
+  el.classList.add("open")};
+ const pick=n=>{inp.value=n;el.val=n;el.classList.remove("open");el.classList.add("has");inp.blur();if(el.onpick)el.onpick()};
+ inp.addEventListener("focus",()=>{inp.select();render()});
+ inp.addEventListener("input",()=>{el.val=null;el.classList.toggle("has",!!inp.value);render()});
+ inp.addEventListener("keydown",e=>{
+  const its=dd.querySelectorAll(".it");
+  if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();sel=(sel+(e.key==="ArrowDown"?1:-1)+its.length)%its.length;its.forEach((x,k)=>x.classList.toggle("on",k==sel));its[sel]&&its[sel].scrollIntoView({block:"nearest"})}
+  else if(e.key==="Enter"&&cur[sel]){e.preventDefault();pick(cur[sel])}
+  else if(e.key==="Escape")el.classList.remove("open")});
+ dd.addEventListener("pointerdown",e=>{const it=e.target.closest(".it");if(it){e.preventDefault();pick(cur[+it.dataset.k])}});
+ el.querySelector(".x").onclick=()=>{inp.value="";el.val=null;el.classList.remove("has");inp.focus()};
+ el.set=n=>{inp.value=n||"";el.val=n;el.classList.toggle("has",!!n)};
+ inp.addEventListener("blur",()=>setTimeout(()=>el.classList.remove("open"),120));
+}
+const A=$("ca"),B=$("cb");combo(A,"Kahan se (From)");combo(B,"Kahan tak (To)");
+A.onpick=()=>{B.val?show():B.querySelector("input").focus()};B.onpick=()=>{if(A.val)show()};
+function route(a,b,o={}){
+ const tw=o.tw??7,bs=o.bs||new Set,bl=o.bl||new Set,dist={},prev={},done={},key=(s,i)=>s+"@"+i;let q=[];
+ at[a].forEach(i=>{if(!bl.has(i)){dist[key(a,i)]=0;q.push([0,a,i])}});
+ while(q.length){
+  q.sort((x,y)=>x[0]-y[0]);const[d,s,i]=q.shift(),k=key(s,i);if(done[k])continue;done[k]=1;
+  if(s===b){const p=[];let c=k;while(c){const m=c.match(/^(.*)@(\d+)$/);p.unshift([m[1],+m[2]]);c=prev[c]}return p}
+  const L=D[i].s,x=L.indexOf(s),nx=[];
+  if(x>0)nx.push([L[x-1],i,2]);if(x<L.length-1)nx.push([L[x+1],i,2]);
+  if(!bs.has(s))at[s].forEach(j=>{if(j!==i&&!bl.has(j))nx.push([s,j,tw])});
+  nx.forEach(([t,j,w])=>{const kk=key(t,j);if(dist[kk]===undefined||d+w<dist[kk]){dist[kk]=d+w;prev[kk]=k;q.push([d+w,t,j])}})}
+ return null}
+const fare=km=>km<=2?11:km<=5?21:km<=12?32:km<=21?43:km<=32?54:64;
+function legsOf(p){const legs=[];p.forEach(([s,i])=>{const l=legs[legs.length-1];if(l&&l.i===i)l.st.push(s);else legs.push({i,st:[s]})});return legs.filter(l=>l.st.length>1)}
+function info(R){const n=R.reduce((t,l)=>t+l.st.length-1,0),ch=R.length-1;return{R,n,ch,mins:Math.round(n*2.1+ch*5),fare:fare(n*1.2),ap:R.some(l=>D[l.i].n=="Airport Express")}}
+function options(a,b){
+ const seen=new Set(),C=[];
+ const add=p=>{if(!p)return false;const R=legsOf(p),sg=R.map(l=>l.i+":"+l.st[0]).join("|");if(seen.has(sg))return false;seen.add(sg);C.push(info(R));return true};
+ [7,2,20,40].forEach(tw=>add(route(a,b,{tw})));
+ let fr=C.slice();
+ for(let r=0;r<2;r++){const nw=[];
+  fr.forEach(c=>{
+   c.R.forEach((l,k)=>{if(k>0){const p=route(a,b,{bs:new Set([l.st[0]])});const n=C.length;if(add(p))nw.push(C[n])}});
+   c.R.forEach(l=>{const p=route(a,b,{bl:new Set([l.i])});const n=C.length;if(add(p))nw.push(C[n])})});
+  fr=nw}
+ C.sort((x,y)=>x.mins-y.mins);
+ const best=C[0],mc=Math.min(...C.map(c=>c.ch));
+ const O=C.filter(c=>c.mins<=best.mins*1.6+10&&c.ch<=mc+2).slice(0,4);
+ const fc=O.find(c=>c.ch===mc);
+ O.forEach((c,k)=>{c.lb=k==0?"⚡ Sabse tez":c===fc?"🔁 Kam change":"Via "+(c.R.slice(1).map(l=>l.st[0]).join(", ")||"direct")});
+ if(fc===O[0]&&mc===O[0].ch&&O.length>1)O[0].lb="⚡ Sabse tez · kam change";
+ return O}
+const PX={"Janakpuri West|Magenta Line|Botanical Garden":3,"Janakpuri West|Magenta Line|Krishna Park Extension":4,"Rajouri Garden|Pink Line|Shiv Vihar":3,"Rajouri Garden|Pink Line|Majlis Park":4,"Rajiv Chowk|Blue Line|Noida Electronic City":3,"Rajiv Chowk|Blue Line|Dwarka Sector 21":4,"Kashmere Gate|Red Line|Rithala":3,"Kashmere Gate|Red Line|Shaheed Sthal":4,"Kashmere Gate|Violet Line|Raja Nahar Singh":5};
+const DEF={"Yellow Line":{"HUDA City Centre":1,"Samaypur Badli":2},"Blue Line":{"Noida Electronic City":1,"Dwarka Sector 21":2}};
+function pf(ln,s,to){
+ let n=PX[s+"|"+ln+"|"+to];
+ if(!n&&DEF[ln]&&s!=="Yamuna Bank")n=DEF[ln][to];
+ const nm=to=="HUDA City Centre"?"HUDA City Centre / Millennium City Centre":to=="Noida Electronic City"?"Noida Electronic City / Vaishali":to;
+ const c=(D.find(x=>x.n==ln)||{c:"#888"}).c,tc=c=="#f5b700"?"#101828":"#fff";
+ return n?`<span class="pfp" style="background:${c};color:${tc}"><small>PLATFORM</small><b>${n}</b></span><span class="pft"><b>${nm}</b> ki taraf</span>`:`<span class="pfp none" style="border-color:${c}"><small>PLATFORM</small><b>?</b></span><span class="pft">Jis par <b>${nm}</b> likha ho</span>`}
+let OPTS=[],SEL=0,AB=[];
+function show(){
+ const a=A.val,b=B.val,o=$("out");
+ if(!a||!b){o.innerHTML='<div class="card err">Dono stations dropdown se select karein.</div>';return}
+ if(a===b){o.innerHTML='<div class="card err">From aur To same hain.</div>';return}
+ OPTS=options(a,b);SEL=0;AB=[a,b];
+ if(!OPTS.length||!OPTS[0]){o.innerHTML='<div class="card err">Route nahi mila.</div>';return}
+ draw();o.scrollIntoView({behavior:"smooth",block:"start"})}
+function draw(){
+ const[a,b]=AB,c=OPTS[SEL],R=c.R;
+ let h=`<div class="card"><div class="rt">${a} → ${b}</div><div class="mu" style="margin-top:2px">${OPTS.length} route option${OPTS.length>1?"s":""} mile — apna chuniye</div><div class="opts">${OPTS.map((x,k)=>`<div class="op${k==SEL?" sel":""}" data-o="${k}"><div class="ol">${x.lb}</div><div class="ot">${x.mins} min</div><div class="mu">${x.n} stn · ${x.ch} change${x.ch==1?"":"s"}</div><div class="vl">${x.R.map(l=>`<span style="background:${D[l.i].c}" title="${D[l.i].n}"></span>`).join("")}</div><div class="lp">${x.R.map(l=>`<span style="background:${D[l.i].c};color:${D[l.i].c=="#f5b700"?"#101828":"#fff"}">${D[l.i].n.replace(/ \(.*\)/,"")}</span>`).join("<i>→</i>")}</div></div>`).join("")}</div></div>`;
+ h+=`<div class="card"><div class="sum"><div class="tile"><b>${c.mins} min</b><span>approx time</span></div><div class="tile"><b>${c.n}</b><span>stations</span></div><div class="tile"><b>₹${c.fare}</b><span>approx fare</span></div></div>${c.ap?'<div class="mu" style="margin-top:10px">Airport Express ka fare alag hota hai</div>':""}<div class="tl">`;
+ R.forEach((l,k)=>{
+  const ln=D[l.i],L=ln.s,fw=L.indexOf(l.st[1])>L.indexOf(l.st[0]),to=fw?L[L.length-1]:L[0],last=l.st[l.st.length-1],m=Math.round((l.st.length-1)*2.1);
+  if(k>0)h+=`<div class="chg">🔁 <b>${l.st[0]}</b> par line badlein</div>`;
+  h+=`<div class="leg" style="--c:${ln.c}"><span class="dot" style="top:2px"></span><div class="mu">${k?"Naya train pakdein":"Yahan se chadhein"}</div><div class="rt">${l.st[0]}</div><div style="margin-top:6px"><span class="pill">${ln.n}</span></div><div><div class="pfr">${pf(ln.n,l.st[0],to)}</div><span class="chip">🧭 ${l.st.length-1} stn · ~${m} min</span></div><button class="tg" data-t><span>Saare stations</span><s>▾</s></button><div class="stops">${l.st.map(s=>`<div>${s}</div>`).join("")}</div><span class="dot" style="bottom:-2px"></span><div class="mu" style="margin-top:6px">Yahan utarein</div><div class="rt">${last}</div></div>`});
+ $("out").innerHTML=h+"</div></div>"}
+$("out").addEventListener("click",e=>{const t=e.target.closest("[data-t]");if(t){t.classList.toggle("o");t.nextElementSibling.classList.toggle("o");return}const p=e.target.closest("[data-o]");if(p){SEL=+p.dataset.o;draw()}});
+$("go").onclick=show;
+$("sw").onclick=()=>{const x=A.val,y=B.val;A.set(y);B.set(x);$("sw").style.transform=$("sw").style.transform?"":"rotate(180deg)";if(x&&y)show()};
+const hh=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function lineP(st){return [...new Set(at[st])].map(i=>`<span style="background:${D[i].c};color:${D[i].c=="#f5b700"?"#101828":"#fff"}">${D[i].n.replace(/ \(.*\)/,"")}</span>`).join("")}
+const prompt1=q=>`Delhi NCR metro helper. The traveller wants to go to: "${q}" (Delhi/NCR). Pick up to 3 metro stations from the LIST below that are best to reach it, nearest first (add a second line/station only if it is a genuinely good alternative, e.g. better connectivity). Use ONLY exact names from the LIST.
+LIST: ${names.join(" | ")}
+Reply with JSON only, no markdown: {"found":true|false,"candidates":[{"station":"exact name from LIST","walk_min":number (realistic walking minutes, 0 if inside the station),"note":"max 12 words in Hinglish: direction/gate/auto hint"}]}. If you do not know the place, return {"found":false,"candidates":[]}.`;
+const LMD=`India Gate|indiagate,kartavya path|Supreme Court:20;Central Secretariat:25;Khan Market:25|Auto/e-rickshaw bhi mil jaate hain
+Red Fort|lal qila,lal kila|Lal Qila:5;Chandni Chowk:12|
+Jama Masjid|jama masjid delhi|Jama Masjid:5;Chandni Chowk:15|
+Chandni Chowk Market|chandni chowk bazaar,old delhi market|Chandni Chowk:3;Chawri Bazar:8|
+Qutub Minar|qutab minar,qutub|Qutab Minar:15|Door hai — auto/e-rickshaw lein
+Humayun's Tomb|humayun tomb,humayun ka maqbara|JLN Stadium:15;Jangpura:18;Sarai Kale Khan Nizamuddin:20|Auto/e-rickshaw lein
+Lotus Temple|bahai temple,bahai|Kalkaji Mandir:12;Nehru Place:15|
+Akshardham Temple|akshardham mandir|Akshardham:5|
+Lodhi Garden|lodi garden,lodhi road|Jor Bagh:10;Khan Market:15|
+Safdarjung Tomb|safdarjung ka maqbara|Jor Bagh:12|
+Jantar Mantar|jantar|Patel Chowk:6;Rajiv Chowk:12|
+Rashtrapati Bhavan|president house|Central Secretariat:12|
+Parliament House|sansad bhavan,sansad|Central Secretariat:10;Patel Chowk:8|
+Purana Qila|old fort,pragati maidan fort|Supreme Court:10|
+Bharat Mandapam|pragati maidan,itpo|Supreme Court:8|
+Hauz Khas Village|hkv,hauz khas deer park|Hauz Khas:12;Green Park:15|
+Dilli Haat INA|dilli haat|INA:2|
+Sarojini Nagar Market|sarojini|Sarojini Nagar:4|
+Lajpat Nagar Market|lajpat market|Lajpat Nagar:4|
+Karol Bagh Market|ajmal khan road,karol bagh bazaar|Karol Bagh:3|
+Khan Market|khan market delhi|Khan Market:2|
+Connaught Place|cp,connaught circus|Rajiv Chowk:3;Patel Chowk:8|
+Janpath Market|janpath|Janpath:2;Rajiv Chowk:8|
+Palika Bazaar|palika|Rajiv Chowk:3|
+Paharganj|main bazaar paharganj,pahar ganj|New Delhi:7;RK Ashram Marg:10|
+New Delhi Railway Station|ndls,new delhi station,nd station|New Delhi:3|
+Old Delhi Railway Station|delhi junction,dli,old delhi station|Chandni Chowk:8;Kashmere Gate:12|
+Anand Vihar ISBT|anand vihar railway,anand vihar terminal|Anand Vihar ISBT:3|
+Kashmere Gate ISBT|kashmiri gate bus stand,isbt|Kashmere Gate:3|
+Sarai Kale Khan ISBT|sarai kale khan bus stand|Sarai Kale Khan Nizamuddin:3|
+Hazrat Nizamuddin Railway Station|nizamuddin station,nzm|Sarai Kale Khan Nizamuddin:12;Jangpura:15|
+Nizamuddin Dargah|nizamuddin dargah,nizamuddin aulia|Jangpura:15|Auto/e-rickshaw lein
+IGI Airport T3|delhi airport,t3,terminal 3,igi airport|IGI Airport:5;Delhi Aerocity:10|
+Terminal 1 Airport|t1,terminal 1,domestic airport|Terminal 1 IGI Airport:5|
+Yashobhoomi IICC|iicc,convention centre dwarka,yashobhoomi|Yashobhoomi Dwarka Sector 25:2|
+AIIMS Hospital|aiims delhi,all india institute|AIIMS:3|
+Safdarjung Hospital|safdarjung|AIIMS:10;Jor Bagh:12|
+RML Hospital|ram manohar lohia hospital,rml|Patel Chowk:8|
+Sir Ganga Ram Hospital|ganga ram hospital,sgrh|Rajendra Place:12|
+Max Hospital Saket|max saket|Saket:8|
+Apollo Hospital Sarita Vihar|indraprastha apollo,apollo hospital|Jasola Apollo:3|
+Delhi University North Campus|du north campus,north campus,du,delhi university|Vishwavidyalaya:5;GTB Nagar:12|
+Delhi University South Campus|du south campus,south campus|Durgabai Deshmukh South Campus:3|
+JNU|jawaharlal nehru university|Munirka:25;Hauz Khas:30|Door hai — auto lein
+IIT Delhi|iit|IIT Delhi:5|
+Jamia Millia Islamia University|jamia,jmi|Jamia Millia Islamia:5|
+Select Citywalk|citywalk,select city walk,saket mall|Saket:3|
+DLF Mall of India|mall of india noida,mall of india|Noida Sector 18:3|
+Atta Market Noida|sector 18 market,noida sector 18 market|Noida Sector 18:4|
+Pacific Mall Tagore Garden|pacific mall|Tagore Garden:5|
+City Square Mall|city square rajouri|Rajouri Garden:3|
+Cyber Hub|cyberhub,dlf cyber hub|Belvedere Towers:8;Moulsari Avenue:10|
+Noida Film City|film city|Noida Sector 16:8|
+Okhla Bird Sanctuary|bird sanctuary|Okhla Bird Sanctuary:5|
+Kalindi Kunj|kalindi kunj park|Kalindi Kunj:3|
+GK M Block Market|greater kailash market,gk market|Greater Kailash:5|
+Nehru Place Market|nehru place it market|Nehru Place:2|
+Pitampura TV Tower|pitampura|Pitampura:3|
+Tis Hazari Court|tis hazari courts|Tis Hazari:3|
+Supreme Court|sc|Supreme Court:5|
+Saket Court|saket courts|Saket:8;Malviya Nagar:10|
+Karkardooma Court|karkardooma courts|Karkarduma Court:2|
+National School of Drama|nsd,shri ram centre,mandi house|Mandi House:3|
+Raj Ghat|rajghat,gandhi samadhi|Delhi Gate:12|Auto/e-rickshaw lein
+Arun Jaitley Stadium|feroz shah kotla,kotla|Delhi Gate:5;ITO:10|
+Jawaharlal Nehru Stadium|jln stadium|JLN Stadium:3|
+Gurudwara Bangla Sahib|bangla sahib|Patel Chowk:10;Rajiv Chowk:12|
+Gurudwara Sis Ganj Sahib|sis ganj|Chandni Chowk:3|
+Birla Mandir Delhi|laxmi narayan mandir,birla mandir|RK Ashram Marg:10|
+Hanuman Mandir CP|hanuman mandir connaught place|Rajiv Chowk:5|
+Kalkaji Temple|kalkaji mandir|Kalkaji Mandir:3|
+Jhandewalan Mandir|jhandewalan hanuman|Jhandewalan:3|
+Chhatarpur Mandir|chhatarpur temple|Chhatarpur:10|
+Janakpuri District Centre|janakpuri|Janakpuri West:5|
+Vikaspuri|vikas puri,vikaspuri east,vikaspuri block|Janakpuri West:10;Uttam Nagar East:15;Krishna Park Extension:10|Block ke hisaab se best station badalta hai — apna block dekh lein
+Rajouri Garden Market|rajouri market|Rajouri Garden:3|
+Okhla Industrial Area|okhla phase|Okhla NSIC:8|
+MG Road Gurgaon|sahara mall|MG Road:3|
+Gurgaon Sector 29|leisure valley|IFFCO Chowk:15|Door hai — auto lein
+Millennium City Centre|huda city centre gurgaon|HUDA City Centre:1|`.trim().split("\n").map(l=>{const[a,b,c,d]=l.split("|");return{n:a,k:(a+","+(b||"")).toLowerCase(),st:c.split(";").map(x=>{const[s,w]=x.split(":");return{station:s,walk:+w}}),note:d||""}});
+const EX=["India Gate","Red Fort","AIIMS Hospital","Lotus Temple","Select Citywalk","Cyber Hub"];
+const norm=s=>String(s).toLowerCase().replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
+function lmSearch(q){q=norm(q);if(!q)return[];const t=q.split(" ");
+ return LMD.map(e=>{const nn=norm(e.n),al=e.k.split(",").map(norm).filter(Boolean),kk=al.join(" ");let sc=0;
+  if(nn===q)sc=100;else if(nn.startsWith(q))sc=80;else if(nn.includes(q))sc=60;else if(al.some(a=>a===q||(q.length>=3&&a.startsWith(q))||(a.length>3&&q.includes(a))))sc=50;else if(t.every(w=>kk.includes(w)))sc=30;
+  return{e,sc}}).filter(x=>x.sc).sort((a,b)=>b.sc-a.sc)}
+const pcb=$("pq").parentElement,pdd=document.createElement("div");pdd.className="dd";pcb.appendChild(pdd);
+function suggest(){const q=$("pq").value.trim();
+ const L=q?lmSearch(q).slice(0,5).map(x=>({t:"📍",n:x.e.n})):EX.map(n=>({t:"📍",n}));
+ const S=q?names.filter(n=>norm(n).includes(norm(q))).slice(0,4).map(n=>({t:"🚉",n})):[];
+ const all=[...L,...S];
+ pdd.innerHTML=(q?"":'<div class="hd">Popular jagah</div>')+(all.length?all.map(x=>`<div class="it" data-n="${hh(x.n)}"><span>${x.t} ${hh(x.n)}</span></div>`).join(""):'<div class="no">Saved list mein nahi — "Nearest metro dhundo" dabayein</div>');
+ pcb.classList.add("open")}
+$("pq").addEventListener("focus",suggest);$("pq").addEventListener("input",suggest);
+$("pq").addEventListener("blur",()=>setTimeout(()=>pcb.classList.remove("open"),150));
+pdd.addEventListener("pointerdown",e=>{const it=e.target.closest(".it");if(it){e.preventDefault();$("pq").value=it.dataset.n;findPlace()}});
+async function findPlace(qq){
+ const q=(qq||$("pq").value).trim(),po=$("pout");if(!q)return;pcb.classList.remove("open");$("pq").blur();
+ po.innerHTML='<div class="card mu">Dhoondh raha hoon…</div>';
+ let res=null,src="";const m=lmSearch(q),top=m[0],ex=names.find(n=>norm(n)===norm(q));
+ const fromLM=e=>e.st.map(x=>({station:x.station,walk_min:x.walk,note:e.note||(x.walk>15?"Door hai — auto/e-rickshaw lein":"")}));
+ if(top&&top.sc>=50){res=fromLM(top.e);src="saved"}
+ else if(ex){res=[{station:ex,walk_min:0,note:"Ye khud metro station hai"}];src="saved"}
+ if(!res){try{const sm=window.claude?await claude.use("sample"):null;if(sm){const r=await sm.json(prompt1(q));if(r&&Array.isArray(r.candidates)&&r.candidates.length){res=r.candidates;src="ai"}}}catch(e){}}
+ if(!res){if(top){res=fromLM(top.e);src="saved"}else{const st=find(q);if(st){res=[{station:st,walk_min:0,note:"Station ke naam se match hua"}];src="saved"}}}
+ const seen=new Set();let cs=[];
+ (res||[]).forEach(c=>{const s=find(String(c.station||""));if(s&&!seen.has(s)){seen.add(s);cs.push({station:s,walk:Math.max(0,Math.round(+c.walk_min||0)),note:c.note||""})}});
+ cs=cs.slice(0,3);
+ if(!cs.length){po.innerHTML='<div class="card err">Is jagah ke liye metro nahi mila. Landmark ya area ka naam thoda aur saaf likhein.</div>';return}
+ const from=A.val;
+ if(from)cs.forEach(c=>{if(c.station===from){c.mins=c.walk;c.ride=0}else{const o=options(from,c.station)[0];c.mins=o?o.mins+c.walk:999;c.ride=o?o.mins:null}});
+ if(from&&cs.length>1)cs.sort((x,y)=>x.mins-y.mins);
+ po.innerHTML=`<div class="card"><div class="rt">📍 ${hh(q)}</div><div class="mu" style="margin-top:2px">${from?`Aapke From (${hh(from)}) ke hisaab se sorted`:"Sabse paas wale metro stations"}</div>`+cs.map((c,k)=>`<div class="pc${k==0?" best":""}"><div class="pr"><b class="rk">${k+1}</b><div style="flex:1;min-width:0"><div class="tg2">${k==0?(from&&cs.length>1?"⭐ Aapke liye best":"📍 Sabse paas"):"Alternative"}</div><div class="rt">${c.station}</div><div class="lp">${lineP(c.station)}</div></div><span class="wk">🚶<b>${c.walk}</b><small>min</small></span></div>${c.note?`<div class="mu" style="margin-top:6px">${hh(c.note)}</div>`:""}${from&&c.ride!=null?`<div class="mu" style="margin-top:4px">Metro ~${c.ride} min + walk ${c.walk} min = <b style="color:var(--tx)">~${c.mins} min</b></div>`:""}<div class="pb"><button data-a="f" data-s="${hh(c.station)}">From banao</button><button class="pri" data-a="r" data-s="${hh(c.station)}">Route dekho →</button></div></div>`).join("")+`<div class="mu" style="margin-top:10px">${src=="ai"?"Claude se mila — walking time andaaza hai, Google Maps se confirm karein.":"Saved list se — walking time andaaza hai, Google Maps se confirm karein."}</div></div>`}
+
+$("ex").innerHTML=EX.map(x=>`<button data-e="${hh(x)}">${hh(x)}</button>`).join("");
+$("pgo").onclick=()=>findPlace();$("pq").addEventListener("keydown",e=>{if(e.key==="Enter")findPlace()});
+$("ex").onclick=e=>{const b=e.target.closest("[data-e]");if(b){$("pq").value=b.dataset.e;findPlace()}};
+$("pout").addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b)return;const s=b.dataset.s;
+ if(b.dataset.a=="f"){A.set(s);b.textContent="✓ From set"}
+ else{B.set(s);document.querySelector('[data-m="r"]').click();if(A.val)show();else{$("ca").querySelector("input").focus()}}});
+
+function setMode(m){document.querySelectorAll(".tb").forEach(x=>x.classList.toggle("on",x.dataset.m==m));
+ [["r","rt","out"],["p","pl","pout"],["l","ll","lout"]].forEach(([k,a,b])=>{$(a).style.display=k==m?"":"none";$(b).style.display=k==m?"":"none"})}
+document.querySelectorAll(".tb").forEach(b=>b.onclick=()=>setMode(b.dataset.m));
+(function(){
+ const hav=(a,b,c,d)=>{const r=Math.PI/180,x=(c-a)*r,y=(d-b)*r,h=Math.sin(x/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin(y/2)**2;return 12742e3*Math.asin(Math.sqrt(h))};
+ const key=s=>String(s).toLowerCase().replace(/[^a-z0-9]/g,""),NK={};names.forEach(n=>NK[key(n)]=n);
+ const match=n=>NK[key(n)]||NK[key(n).replace(/metrostation$/,"")]||null;
+ const fm=d=>d<1000?Math.round(d/10)*10+" m":(d/1000).toFixed(1)+" km";
+ let cache=null,wid=null,busy=false;
+ async function load(la,lo){
+  const q=`[out:json][timeout:20];(node["station"="subway"](around:4000,${la},${lo});node["railway"="station"]["network"~"Delhi Metro",i](around:4000,${la},${lo}););out body;`;
+  for(const u of["https://overpass-api.de/api/interpreter","https://overpass.kumi.systems/api/interpreter"]){
+   try{const r=await fetch(u+"?data="+encodeURIComponent(q));if(!r.ok)continue;const j=await r.json();
+    const l=j.elements.filter(e=>e.tags&&e.tags.name&&e.lat).map(e=>({n:e.tags.name,la:e.lat,lo:e.lon}));if(l.length)return{la,lo,list:l}}catch(e){}}
+  return null}
+ const msg=(h,c)=>{$("lout").innerHTML=`<div class="card ${c||"mu"}">${h}</div>`};
+ function render(p){
+  const{latitude:la,longitude:lo,accuracy:ac}=p.coords,m={};
+  cache.list.forEach(s=>{const d=hav(la,lo,s.la,s.lo);if(!m[s.n]||d<m[s.n].d)m[s.n]={n:s.n,d}});
+  const a=Object.values(m).sort((x,y)=>x.d-y.d).slice(0,3).map(x=>({...x,st:match(x.n)}));
+  if(!a.length){msg("Paas mein koi metro station nahi mila.","err");return}
+  const t=a[0],on=t.d<=Math.max(120,ac);
+  $("lout").innerHTML=`<div class="card"><div class="mu">${on?"📡 Aap abhi is station par/paas hain":"📡 Aapke sabse paas ka station"}</div><div class="rt" style="font-size:22px;margin:4px 0">${t.st||t.n}</div>${t.st?`<div class="lp">${lineP(t.st)}</div>`:""}<div class="mu" style="margin-top:6px">${fm(t.d)} door · ~${Math.max(1,Math.round(t.d*1.3/80))} min walk · GPS ±${fm(ac)}</div></div>`+a.map((x,k)=>`<div class="pc${k==0?" best":""}"><div class="pr"><b class="rk">${k+1}</b><div style="flex:1;min-width:0"><div class="rt">${x.st||x.n}</div>${x.st?`<div class="lp">${lineP(x.st)}</div>`:'<div class="mu">App ke station list se naam match nahi hua</div>'}</div><span class="wk"><b>${fm(x.d).replace(" ","")}</b><small>door</small></span></div>${x.st?`<div class="pb"><button data-a="f" data-s="${hh(x.st)}">Yahan se (From)</button><button class="pri" data-a="t" data-s="${hh(x.st)}">Yahan jaana hai (To)</button></div>`:""}</div>`).join("")+'<div class="mu" style="padding:10px 4px 0">Underground stations ke andar GPS kamzor hota hai, isliye distance thoda upar-neeche ho sakta hai.</div>'}
+ async function onPos(p){
+  if(!cache||hav(cache.la,cache.lo,p.coords.latitude,p.coords.longitude)>2500){
+   if(busy)return;busy=true;msg("Paas ke stations dhoondh raha hoon…");
+   cache=await load(p.coords.latitude,p.coords.longitude);busy=false;
+   if(!cache){msg("Station data nahi aa paya. Internet check karke dobara try karein.","err");return}}
+  render(p)}
+ function onErr(e){msg(e.code==1?"Location permission band hai. Browser/phone settings mein is app ke liye Location allow karein.":"Location nahi mil paayi. Open jagah mein jaakar dobara try karein.","err")}
+ $("lgo").onclick=()=>{
+  if(!navigator.geolocation){msg("Is device/browser mein location support nahi hai.","err");return}
+  if(wid!==null){navigator.geolocation.clearWatch(wid);wid=null}
+  msg("Location le raha hoon…");
+  if($("live").checked)wid=navigator.geolocation.watchPosition(onPos,onErr,{enableHighAccuracy:true,maximumAge:5000,timeout:25000});
+  else navigator.geolocation.getCurrentPosition(onPos,onErr,{enableHighAccuracy:true,timeout:20000,maximumAge:10000})};
+ $("live").onchange=()=>{if(!$("live").checked&&wid!==null){navigator.geolocation.clearWatch(wid);wid=null}};
+ $("lout").addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b)return;const s=b.dataset.s;
+  if(b.dataset.a=="f"){A.set(s);setMode("r");B.val?show():$("cb").querySelector("input").focus()}
+  else{B.set(s);setMode("r");A.val?show():$("ca").querySelector("input").focus()}})
+})();
+
+(function(){
+ const st=window.matchMedia("(display-mode: standalone)").matches||navigator.standalone;
+ if("serviceWorker"in navigator&&/^https?:$/.test(location.protocol))navigator.serviceWorker.register("sw.js").catch(()=>{});
+ let dp=null;const b=document.getElementById("inst");
+ window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();dp=e;if(!st)b.style.display="inline-block"});
+ b.onclick=async()=>{if(!dp)return;dp.prompt();await dp.userChoice;dp=null;b.style.display="none"};
+ window.addEventListener("appinstalled",()=>{b.style.display="none"});
+ if(/iphone|ipad|ipod/i.test(navigator.userAgent)&&!st)document.getElementById("ios").style.display="inline-block";
+})();
+</script></body></html>
