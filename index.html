@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="hi"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#2f5bea"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Delhi Metro"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#2f5bea"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-180.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Delhi Metro"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Delhi Metro Route Finder</title>
 <style>
 :root{--bg:#f2f4f8;--card:#fff;--tx:#101828;--mu:#667085;--bd:#e4e7ec;--ac:#2f5bea;--ac2:#7a3ff2;--hl:#fff3c4;--sh:0 4px 18px rgba(16,24,40,.08);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -273,9 +273,141 @@ Rajouri Garden Market|rajouri market|Rajouri Garden:3|
 Okhla Industrial Area|okhla phase|Okhla NSIC:8|
 MG Road Gurgaon|sahara mall|MG Road:3|
 Gurgaon Sector 29|leisure valley|IFFCO Chowk:15|Door hai — auto lein
-Millennium City Centre|huda city centre gurgaon|HUDA City Centre:1|`.trim().split("\n").map(l=>{const[a,b,c,d]=l.split("|");return{n:a,k:(a+","+(b||"")).toLowerCase(),st:c.split(";").map(x=>{const[s,w]=x.split(":");return{station:s,walk:+w}}),note:d||""}});
+Millennium City Centre|huda city centre gurgaon|HUDA City Centre:1|
+Agrasen Ki Baoli|agrasen baoli,agrasen ki baoli|Barakhamba Road:10;Rajiv Chowk:15|
+National Museum|national museum delhi|Central Secretariat:12;Janpath:15|
+Sunder Nursery|sundar nursery|JLN Stadium:15;Jangpura:18|Auto/e-rickshaw lein
+Mehrauli Archaeological Park|mehrauli park,jamali kamali|Qutab Minar:15|
+Mehrauli|mehrauli market|Qutab Minar:15|
+Majnu Ka Tila|majnu ka teela,tibetan colony,mt|Vidhan Sabha:12;Civil Lines:15|
+Kamla Nagar Market|kamla nagar|Vishwavidyalaya:12|
+Mukherjee Nagar|mukherjee nagar market,coaching hub|GTB Nagar:12|
+Old Rajinder Nagar|old rajendra nagar,rajinder nagar|Rajendra Place:10;Karol Bagh:15|
+Delhi Zoo|national zoological park,zoo|Supreme Court:15|Auto/e-rickshaw lein
+Garden of Five Senses|five senses|Saket:15|
+Delhi Metro Museum|metro museum|Patel Chowk:3|
+Fatehpuri Masjid|fatehpuri|Chandni Chowk:5;Chawri Bazar:8|
+Khari Baoli|spice market,khari baoli market|Chawri Bazar:12;Chandni Chowk:15|
+Nai Sarak|nai sadak,book market chandni chowk|Chawri Bazar:3|
+Chawri Bazar|chawri bazaar,paper market|Chawri Bazar:3|
+Dariba Kalan|dariba|Chandni Chowk:5|
+Kinari Bazar|kinari|Chandni Chowk:5|
+Meena Bazar Jama Masjid|meena bazaar|Jama Masjid:3|
+Daryaganj Book Market|daryaganj sunday market,daryaganj|Delhi Gate:10|
+Gaffar Market|ghaffar market|Karol Bagh:5|
+Bhagirath Palace|electronics market chandni chowk|Chandni Chowk:8|
+Tilak Nagar Market|tilak nagar bazaar|Tilak Nagar:5|
+Uttam Nagar Market|uttam nagar mandi,uttam nagar bazaar|Uttam Nagar East:8;Uttam Nagar West:10|
+Najafgarh Market|najafgarh bazaar|Najafgarh:10|
+Dwarka Sector 10 Market|dwarka sec 10 market,sector 10 dwarka|Dwarka Sector 10:3|
+Shahdara Market|shahdara bazaar|Shahdara:5|
+Laxmi Nagar Market|laxmi nagar,lakshmi nagar|Laxmi Nagar:5|
+Preet Vihar Market|preet vihar|Preet Vihar:5|
+Mayur Vihar Phase 1|mayur vihar market|Mayur Vihar-I:5|
+NSP Market|netaji subhash place market,nsp|Netaji Subhash Place:3|
+Paschim Vihar Market|paschim vihar|Paschim Vihar East:8;Paschim Vihar West:8|
+Punjabi Bagh Market|punjabi bagh|Punjabi Bagh:5;Punjabi Bagh West:8|
+Moti Nagar Market|moti nagar|Moti Nagar:5|
+Kirti Nagar Furniture Market|kirti nagar market,furniture market|Kirti Nagar:3|
+Patel Nagar Market|patel nagar|Patel Nagar:5|
+Rajendra Place|rajendra place it market|Rajendra Place:3|
+Mayapuri Scrap Market|mayapuri|Mayapuri:5|
+INA Market|ina|INA:3|
+Green Park Market|green park|Green Park:3|
+Safdarjung Enclave|sdj enclave|Green Park:12|
+Hauz Khas Market|hkv market|Hauz Khas:10|
+Malviya Nagar Market|malviya nagar|Malviya Nagar:5|
+Munirka Market|munirka|Munirka:3|
+Vasant Vihar Market|vasant vihar|Vasant Vihar:5|
+RK Puram Market|r k puram,rk puram|R.K. Puram:5|
+Kalkaji Market|kalkaji|Kalkaji Mandir:5|
+Govindpuri Market|govind puri|Govind Puri:5|
+Chirag Delhi Market|chirag delhi|Chirag Delhi:3|
+Defence Colony Market|defence colony|Lajpat Nagar:18;Jangpura:20|Auto/e-rickshaw lein
+Pitampura Main Market|pitampura market|Pitampura:5|
+Model Town Market|model town|Model Town:5|
+Civil Lines|civil lines delhi|Civil Lines:3|
+Shalimar Bagh Market|shalimar bagh|Shalimar Bagh:5|
+Subhash Nagar Market|subhash nagar|Subhash Nagar:5|
+Krishna Nagar Market|krishna nagar|Krishna Nagar:5|
+Dilshad Garden Market|dilshad garden|Dilshad Garden:5|
+Seelampur Market|seelampur|Seelampur:5|
+Welcome Market|welcome seelampur|Welcome:5|
+Vaishali Market|vaishali ghaziabad|Vaishali:5|
+Kaushambi Bus Stand|kaushambi|Kaushambi:3|
+Noida Sector 62 IT Hub|sector 62 noida|Noida Sector 62:5|
+Noida Golf Course|golf course noida|Golf Course:5|
+Noida Sector 15 Market|sector 15 noida|Noida Sector 15:5|
+Botanical Garden Noida|noida botanical garden|Botanical Garden:3|
+Centrestage Mall|centre stage mall noida|Noida Sector 18:3|
+DLF Place Saket|dlf place|Saket:3|
+DLF Cyber City|cyber city gurgaon|Cyber City:3|
+Moolchand Hospital|moolchand|Moolchand:3|
+LNJP Hospital|lok nayak hospital,lnjp|Delhi Gate:10|
+Delhi Vidhan Sabha|delhi assembly|Vidhan Sabha:3;Civil Lines:5|
+Delhi Secretariat|ito secretariat,ip estate|ITO:3|
+Income Tax Office ITO|ito|ITO:2|
+Vigyan Bhawan|vigyan bhavan|Central Secretariat:10;Udyog Bhawan:12|
+Krishi Bhawan|krishi bhavan|Central Secretariat:5;Udyog Bhawan:8|
+Nirman Bhawan|nirman bhavan|Udyog Bhawan:5;Central Secretariat:8|
+Shastri Bhawan|shastri bhavan|Udyog Bhawan:3|
+Gurudwara Rakab Ganj|rakab ganj|Central Secretariat:10|
+Digambar Jain Lal Mandir|lal mandir chandni chowk|Chandni Chowk:5|
+Gauri Shankar Mandir|gauri shankar temple|Chandni Chowk:5|
+ISKCON Temple Delhi|hare krishna temple,iskcon east of kailash|Kailash Colony:12;Nehru Place:15|
+Yogmaya Temple|yogmaya mandir|Qutab Minar:15|
+Indira Gandhi Stadium|ig stadium|Indraprastha:10|
+Ambedkar University Delhi|aud kashmere gate|Kashmere Gate:8|
+Sector 14 Gurgaon|sector 14 gurugram,sec 14 gurgaon,sec 14 gurugram,sector 14 market gurgaon|IFFCO Chowk:27;MG Road:35|Door hai (~2 km) — auto lein
+Sector 24 Gurgaon|sector 24 gurugram,sec 24 gurgaon,dlf phase 2,sector 25 gurgaon|Phase 2:12;Guru Dronacharya:18|Auto lein
+Sector 31 Gurgaon|sector 31 gurugram,sec 31 gurgaon|HUDA City Centre:15;MG Road:20|Auto lein
+Sector 42 43 Gurgaon|sector 42 gurgaon,sector 43 gurgaon,sector 42 gurugram,sector 43 gurugram|Sector 42-43:5|
+Sector 53 54 Gurgaon|sector 53 gurgaon,sector 54 gurgaon,sector 53 gurugram,sector 54 gurugram|Sector 53-54:5;Sector 54 Chowk:10|
+Sector 55 56 Gurgaon|sector 55 gurgaon,sector 56 gurgaon,sector 56 gurugram,sector 55 gurugram|Sector 55-56:5|
+Sector 48 49 Gurgaon|sector 48 gurgaon,sector 49 gurgaon,sector 57 gurgaon,sector 48 gurugram,sector 49 gurugram,sector 57 gurugram|HUDA City Centre:40|Door hai — auto/cab lein
+DLF Phase 1|dlf phase 1 gurgaon,sector 26 gurgaon|Phase 1:8|
+DLF Phase 3|dlf phase 3 gurgaon,sector 24 25 gurgaon|Phase 3:5|
+Golf Course Road Gurgaon|golf course road,golf course rd gurugram|Sector 54 Chowk:10;Sector 53-54:10;Sector 55-56:10|
+Gurgaon|gurugram,gurgaon city|HUDA City Centre:5;MG Road:5;Sikanderpur:5|Gurgaon ka kaun sa hissa? Sector/area ka naam likhein
+Noida|noida city|Noida City Centre:5;Noida Sector 18:5;Noida Sector 52:5|Noida ka sector ya market likhein
+Greater Noida|greater noida city,gr noida|Pari Chowk:5;Knowledge Park II:5;Alpha 1:5|
+Ghaziabad|ghaziabad city|Vaishali:10;Kaushambi:10|Ghaziabad ke andar auto lein
+Faridabad|faridabad city|Old Faridabad:5;Bata Chowk:5;Neelam Chowk Ajronda:5|
+Rohini|rohini delhi,rohini sector|Rohini East:10;Rohini West:10;Rithala:10|Sector ke hisaab se station badalta hai
+Vasant Kunj|vasant kunj malls,vasant kunj delhi|Vasant Vihar:35;Chhatarpur:40|Door hai — auto lein
+Chanakyapuri|diplomatic enclave|Dhaula Kuan:20|Auto lein
+Qutub Complex Iron Pillar|iron pillar,alai darwaza,qutub complex|Qutab Minar:15|Auto/e-rickshaw lein
+National War Memorial|war memorial,amar jawan jyoti|Central Secretariat:25;Supreme Court:25|Auto/e-rickshaw bhi milti hai
+St James Church|skinner church|Kashmere Gate:5|
+Khooni Darwaza|khooni gate|Delhi Gate:3|
+Hansraj College|hans raj college|Vishwavidyalaya:8|
+St Stephens College|st stephen's college,stephens college|Vishwavidyalaya:10;GTB Nagar:15|
+Hindu College|hindu college delhi|Vishwavidyalaya:8|
+Miranda House|miranda house college|Vishwavidyalaya:8|
+Ramjas College|ramjas|Vishwavidyalaya:10|
+SRCC|shri ram college of commerce,sri ram college commerce|Vishwavidyalaya:12|
+Delhi School of Economics|dse|Vishwavidyalaya:8|
+Kirori Mal College|kmc,kirori mal|Vishwavidyalaya:8|
+Venkateswara College|venky,sri venkateswara college|Durgabai Deshmukh South Campus:15;Dhaula Kuan:20|
+Lady Shri Ram College|lsr|Lajpat Nagar:18|Auto/e-rickshaw lein
+IIIT Delhi|iiit d,iiitd|Govind Puri:15;Nehru Enclave:18|
+GGSIPU Dwarka|ip university,ipu,indraprastha university|Dwarka Sector 14:20|Auto lein
+NIFT Delhi|nift hauz khas|Green Park:10;Hauz Khas:12|
+MAMC|maulana azad medical college|Delhi Gate:8|
+Modern School Barakhamba Road|modern school|Barakhamba Road:3|
+DPS RK Puram|delhi public school rk puram|R.K. Puram:12|
+`.trim().split("\n").map(l=>{const[a,b,c,d]=l.split("|");return{n:a,k:(a+","+(b||"")).toLowerCase(),st:c.split(";").map(x=>{const[s,w]=x.split(":");return{station:s,walk:+w}}),note:d||""}});
 const EX=["India Gate","Red Fort","AIIMS Hospital","Lotus Temple","Select Citywalk","Cyber Hub"];
 const norm=s=>String(s).toLowerCase().replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
+function sectorRule(q){
+ const s=norm(q),m=s.match(/^(?:sector|sec)\s*(\d+)\s*(noida|dwarka|rohini)$/)||s.match(/^(noida|dwarka|rohini)\s*(?:sector|sec)\s*(\d+)$/);
+ if(!m)return null;const city=isNaN(m[1])?m[1]:m[2],n=+(isNaN(m[1])?m[2]:m[1]);
+ const nm=({noida:"Noida Sector ",dwarka:"Dwarka Sector ",rohini:"Rohini Sector "})[city]+n;
+ if(names.includes(nm))return[{station:nm,walk_min:5,note:"Is sector mein hi station hai"}];
+ if(city=="noida"&&n>=19&&n<=28)return[{station:"Noida Sector 18",walk_min:20,note:"Auto/e-rickshaw lein — andaaza"}];
+ if(city=="dwarka"&&(n==22||n==23))return[{station:"Dwarka Sector 21",walk_min:20,note:"Auto/e-rickshaw lein — andaaza"}];
+ return null}
+function stFind(q){q=norm(q);if(!q)return null;return names.find(n=>norm(n)===q)||names.find(n=>norm(n).startsWith(q))||names.find(n=>norm(n).includes(q))||null}
 function lmSearch(q){q=norm(q);if(!q)return[];const t=q.split(" ");
  return LMD.map(e=>{const nn=norm(e.n),al=e.k.split(",").map(norm).filter(Boolean),kk=al.join(" ");let sc=0;
   if(nn===q)sc=100;else if(nn.startsWith(q))sc=80;else if(nn.includes(q))sc=60;else if(al.some(a=>a===q||(q.length>=3&&a.startsWith(q))||(a.length>3&&q.includes(a))))sc=50;else if(t.every(w=>kk.includes(w)))sc=30;
@@ -284,7 +416,7 @@ const pcb=$("pq").parentElement,pdd=document.createElement("div");pdd.className=
 function suggest(){const q=$("pq").value.trim();
  const L=q?lmSearch(q).slice(0,5).map(x=>({t:"📍",n:x.e.n})):EX.map(n=>({t:"📍",n}));
  const S=q?names.filter(n=>norm(n).includes(norm(q))).slice(0,4).map(n=>({t:"🚉",n})):[];
- const all=[...L,...S];
+ const all=[...(q?[{t:"🔎",n:q}]:[]),...L,...S];
  pdd.innerHTML=(q?"":'<div class="hd">Popular jagah</div>')+(all.length?all.map(x=>`<div class="it" data-n="${hh(x.n)}"><span>${x.t} ${hh(x.n)}</span></div>`).join(""):'<div class="no">Saved list mein nahi — "Nearest metro dhundo" dabayein</div>');
  pcb.classList.add("open")}
 $("pq").addEventListener("focus",suggest);$("pq").addEventListener("input",suggest);
@@ -293,16 +425,16 @@ pdd.addEventListener("pointerdown",e=>{const it=e.target.closest(".it");if(it){e
 async function findPlace(qq){
  const q=(qq||$("pq").value).trim(),po=$("pout");if(!q)return;pcb.classList.remove("open");$("pq").blur();
  po.innerHTML='<div class="card mu">Dhoondh raha hoon…</div>';
- let res=null,src="";const m=lmSearch(q),top=m[0],ex=names.find(n=>norm(n)===norm(q));
+ let res=null,src="";const sr=sectorRule(q),m=lmSearch(q),top=m[0],ex=names.find(n=>norm(n)===norm(q));
  const fromLM=e=>e.st.map(x=>({station:x.station,walk_min:x.walk,note:e.note||(x.walk>15?"Door hai — auto/e-rickshaw lein":"")}));
- if(top&&top.sc>=50){res=fromLM(top.e);src="saved"}
+ if(sr){res=sr;src="saved"}else if(top&&top.sc>=50){res=fromLM(top.e);src="saved"}
  else if(ex){res=[{station:ex,walk_min:0,note:"Ye khud metro station hai"}];src="saved"}
  if(!res){try{const sm=window.claude?await claude.use("sample"):null;if(sm){const r=await sm.json(prompt1(q));if(r&&Array.isArray(r.candidates)&&r.candidates.length){res=r.candidates;src="ai"}}}catch(e){}}
- if(!res){if(top){res=fromLM(top.e);src="saved"}else{const st=find(q);if(st){res=[{station:st,walk_min:0,note:"Station ke naam se match hua"}];src="saved"}}}
+ if(!res){if(top){res=fromLM(top.e);src="saved"}else{const st=stFind(q);if(st){res=[{station:st,walk_min:0,note:"Station ke naam se match hua"}];src="saved"}}}
  const seen=new Set();let cs=[];
- (res||[]).forEach(c=>{const s=find(String(c.station||""));if(s&&!seen.has(s)){seen.add(s);cs.push({station:s,walk:Math.max(0,Math.round(+c.walk_min||0)),note:c.note||""})}});
+ (res||[]).forEach(c=>{const s=stFind(String(c.station||""));if(s&&!seen.has(s)){seen.add(s);cs.push({station:s,walk:Math.max(0,Math.round(+c.walk_min||0)),note:c.note||""})}});
  cs=cs.slice(0,3);
- if(!cs.length){po.innerHTML='<div class="card err">Is jagah ke liye metro nahi mila. Landmark ya area ka naam thoda aur saaf likhein.</div>';return}
+ if(!cs.length){po.innerHTML='<div class="card err">Ye jagah saved list mein nahi hai. Paas ke kisi metro station ka naam likhein, ya link wale app mein try karein (wahan Claude se dhoondhta hai).</div>';return}
  const from=A.val;
  if(from)cs.forEach(c=>{if(c.station===from){c.mins=c.walk;c.ride=0}else{const o=options(from,c.station)[0];c.mins=o?o.mins+c.walk:999;c.ride=o?o.mins:null}});
  if(from&&cs.length>1)cs.sort((x,y)=>x.mins-y.mins);
